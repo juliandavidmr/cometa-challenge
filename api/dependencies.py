@@ -1,6 +1,7 @@
 from fastapi import Depends
 from datetime import datetime
 
+from api.services.db_service import DBService
 from api.services.stock_service import StockService
 from api.services.order_service import OrderService
 
@@ -14,5 +15,11 @@ stock_service = StockService(
 def get_stock_service():
     return stock_service
 
-def get_order_service(stock_service: StockService = Depends(get_stock_service)):
-    return OrderService(stock_service)
+def get_db_service():
+    return DBService()
+
+def get_order_service(
+    stock_service: StockService = Depends(get_stock_service),
+    db_service: DBService = Depends(get_db_service)
+):
+    return OrderService(stock_service, db_service)

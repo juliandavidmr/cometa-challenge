@@ -22,7 +22,7 @@ def get_all_stocks():
     return {"success": True, "beers": stock_service.get_stock(), "last_update": stock_service.get_last_update()}
 
 @StockRouter.get("/{order_id:int}")
-def get_order_by_id(order_id: int):
+def get_stock_by_id(order_id: int):
     """
     Get order by id
     """

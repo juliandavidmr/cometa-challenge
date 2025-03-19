@@ -1,7 +1,8 @@
 from typing import TypedDict
 
+
 class StockSchema(TypedDict):
-    id: int
+    id: str
     name: str
     price: float
     quantity: int
