@@ -28,6 +28,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
         name: string
         stockId: string
         quantity: number
+        price: number
     }[]>([])
     const stocksById = useMemo(() => {
         return stocks.reduce((acc, stock) => {
@@ -51,6 +52,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
             name: stocksById[stockId].name,
             stockId,
             quantity,
+            price: stocksById[stockId].price
         }])
     }
 
@@ -95,14 +97,16 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
             <Table className="col-span-12" aria-label="Example static collection table">
                 <TableHeader>
                     <TableColumn>BEER</TableColumn>
-                    <TableColumn>QUANTITY</TableColumn>
-                    <TableColumn>Options</TableColumn>
+                    <TableColumn>#</TableColumn>
+                    <TableColumn>PRICE</TableColumn>
+                    <TableColumn>{' '}</TableColumn>
                 </TableHeader>
                 <TableBody>
                     {orders.map((order, index) => (
                         <TableRow key={order.stockId}>
                             <TableCell>{order.name}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
+                            <TableCell>{order.price}</TableCell>
                             <TableCell>
                                 <Button
                                     variant="flat"

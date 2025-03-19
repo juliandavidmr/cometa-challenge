@@ -85,6 +85,11 @@ class OrderService:
                         )
                     )
 
+            # Apply discounts
+            order["subtotal"] = order["subtotal"] * (
+                order["discounts"] if order["discounts"] > 0 else 1
+            )
+
             orders_with_items.append(
                 OrderSchemaResponseSchema(
                     id=order["id"],
