@@ -119,23 +119,28 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                 </TableBody>
             </Table>
 
-            <Form className="col-span-12 grid grid-cols-2 lg:grid-cols-3 gap-4 w-full" action={handleCreateOrder}>
-                <Dropdown>
+            <Form
+                className="col-span-12 grid grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+                action={handleCreateOrder}
+                validationBehavior="native"
+            >
+                <Dropdown backdrop="blur" shouldBlockScroll={false}>
                     <DropdownTrigger>
-                        <Button className="capitalize" name="stock_id">
-                            {selectedValue}
+                        <Button className="capitalize" name="stock_id" variant="flat">
+                            {selectedValue || 'Select beer'}
                         </Button>
                     </DropdownTrigger>
                     <DropdownMenu
                         aria-label="Single selection example"
                         selectedKeys={selectedKeys}
                         selectionMode="single"
+                        disallowEmptySelection
                         variant="flat"
                         // @ts-expect-error
                         onSelectionChange={setSelectedKeys}
                     >
                         {stocks.map((stock) => (
-                            <DropdownItem key={stock.id} value={stock.id}>
+                            <DropdownItem key={stock.id} value={stock.id} showDivider>
                                 {stock.name}
                             </DropdownItem>
                         ))}
@@ -157,6 +162,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                     variant="flat"
                     color="primary"
                     className="col-span-2 lg:col-span-1"
+                    isDisabled={selectedKeys.size === 0}
                 >
                     Add to order
                 </Button>

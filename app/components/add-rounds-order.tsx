@@ -67,7 +67,7 @@ export const AddRoundOrder: React.FC<TAddRoundOrderProps> = ({ open, orderId, st
 
     return (
         <>
-            <Button color="primary" onPress={onOpen}>
+            <Button variant="light" color="success" size="sm" onPress={onOpen}>
                 Add round
             </Button>
             <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
