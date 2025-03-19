@@ -146,6 +146,8 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                 <Autocomplete
                     label="Beers stock"
                     defaultItems={stocks}
+                    // NOTE: Update for a loading stocks state
+                    isLoading={stocks.length === 0}
                     placeholder="Select a beer"
                     selectedKey={selectedStock}
                     className="col-span-2"

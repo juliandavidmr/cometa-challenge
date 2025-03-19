@@ -368,5 +368,59 @@
         ]
       }
     ]
+  },
+  {
+    "id": "3d55e89e-348f-45f6-93dd-88e86e992855",
+    "created": "2025-03-19 17:28:19",
+    "paid": false,
+    "subtotal": 0,
+    "taxes": 0.0,
+    "discounts": 0.0,
+    "rounds": [
+      {
+        "created": "2025-03-19 17:28:19",
+        "items": [
+          {
+            "stock_id": "6",
+            "quantity": 1
+          },
+          {
+            "stock_id": "5",
+            "quantity": 1
+          },
+          {
+            "stock_id": "18",
+            "quantity": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "906e8eae-5682-441c-8be5-c3744637e8e2",
+    "created": "2025-03-19 17:30:33",
+    "paid": false,
+    "subtotal": 0,
+    "taxes": 0.0,
+    "discounts": 0.0,
+    "rounds": [
+      {
+        "created": "2025-03-19 17:30:33",
+        "items": [
+          {
+            "stock_id": "6",
+            "quantity": 1
+          },
+          {
+            "stock_id": "5",
+            "quantity": 1
+          },
+          {
+            "stock_id": "5",
+            "quantity": 6
+          }
+        ]
+      }
+    ]
   }
 ]
