@@ -2,7 +2,6 @@ from typing import TypedDict, List
 
 
 class OrderItemSchema(TypedDict):
-    id: str
     name: str
     quantity: int
     total: float

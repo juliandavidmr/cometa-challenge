@@ -1,4 +1,3 @@
-from os import name
 from typing import List
 from datetime import datetime
 import uuid
@@ -43,9 +42,11 @@ class OrderService:
                     if stock_item is None:
                         continue
 
+                    subtotal = stock_item["price"] * round_item["quantity"]
+                    order["subtotal"] += subtotal
+
                     items.append(
                         OrderItemSchema(
-                            id=str(uuid.uuid4()),
                             name=stock_item["name"],
                             quantity=round_item["quantity"],
                             total=1,
@@ -70,12 +71,14 @@ class OrderService:
                     if stock_item is None:
                         continue
 
+                    subtotal = stock_item["price"] * item["quantity"]
+                    order["subtotal"] += subtotal
+
                     items.append(
                         OrderItemSchema(
-                            id=str(uuid.uuid4()),
                             name=stock_item["name"],
                             quantity=item["quantity"],
-                            total=0,
+                            total=stock_item["price"] * item["quantity"],
                             price_per_unit=stock_item["price"],
                             stock_id=stock_id,
                         )
@@ -86,9 +89,9 @@ class OrderService:
                     id=order["id"],
                     paid=order["paid"],
                     created=order["created"],
-                    taxes=0,
-                    subtotal=0,
-                    discounts=0,
+                    taxes=order["taxes"],
+                    subtotal=order["subtotal"],
+                    discounts=order["discounts"],
                     items=items,
                     rounds=order["rounds"],
                 )
