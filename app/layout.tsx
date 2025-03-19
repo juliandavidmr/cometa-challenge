@@ -1,4 +1,6 @@
 import "./globals.css";
+import { HeroUIProvider } from "@heroui/react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,8 +16,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <HeroUIProvider>
+      <NextThemesProvider attribute="class" defaultTheme="dark">
+        <html lang="en">
+          <body className={inter.className}>
+            {children}
+          </body>
+        </html >
+      </NextThemesProvider>
+    </HeroUIProvider>
   );
 }

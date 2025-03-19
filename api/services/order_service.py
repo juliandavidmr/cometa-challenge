@@ -97,6 +97,8 @@ class OrderService:
                 )
             )
 
+        orders_with_items.sort(key=lambda x: x["created"], reverse=True)
+
         return orders_with_items
 
     def get_order_by_id(self, id: int):

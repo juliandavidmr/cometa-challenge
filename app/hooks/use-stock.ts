@@ -1,21 +1,19 @@
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
-import { StockModel } from "../types/stocks";
 import { getStocks } from "../repository/stocks.repository";
 
-export const useStock = () => {
-	const [stocks, setStocks] = useState<StockModel[]>([]);
-
-	useEffect(() => {
-		const call = async () => {
-			const stocks = await getStocks();
-			console.log("stocks", stocks);
-			setStocks(stocks);
-		};
-		call();
-	}, []);
+export const useStocks = () => {
+	const {
+		data: stocks = [],
+		error,
+		isLoading,
+		mutate: refetchStocks,
+	} = useSWR("/api/stocks", getStocks);
 
 	return {
 		stocks,
+		error,
+		isLoading,
+		refetchStocks,
 	};
 };
