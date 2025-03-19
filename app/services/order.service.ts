@@ -73,3 +73,15 @@ export async function getCurrentOrders(url: string) {
 	const data = (await response.json()) as CurrentOrdersResponse;
 	return data.orders || [];
 }
+
+export async function markOrderAsPaid(
+	orderId: string,
+	paidStatus: boolean = true
+) {
+	return fetch(
+		`/api/orders/${orderId}/paid/${paidStatus ? "True" : "False"}/`,
+		{
+			method: "PUT",
+		}
+	);
+}

@@ -56,3 +56,13 @@ def remove_order(id: str, order_service: OrderService = Depends(get_order_servic
     if order is None:
         return {"success": False, "message": "Order not found"}
     return {"success": True, "order": order}
+
+
+@OrdersRouter.put("/{id:str}/paid/{paid}")
+def mark_order_as_paid(
+    id: str, paid: bool, order_service: OrderService = Depends(get_order_service)
+):
+    order = order_service.mark_order_as_paid(id=id, paid=paid)
+    if order is None:
+        return {"success": False, "message": "Order not found"}
+    return {"success": True, "order": order}

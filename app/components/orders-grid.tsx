@@ -12,14 +12,16 @@ import type { StockModel } from "../types/stocks"
 import { AddRoundOrder } from "./add-rounds-order"
 
 type TOrdersTableProps = {
+    title: string
     orders: Order[]
     stocks: StockModel[]
     className?: string
+    paidSection?: boolean
     onRefreshOrders: () => void
 }
 
-export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, className, onRefreshOrders }) => {
-    const { removeOrderFn } = useCrudOrders()
+export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSection, stocks, className, onRefreshOrders }) => {
+    const { removeOrderFn, markOrderAsPaidFn } = useCrudOrders()
 
     const handleRemoveOrder = (order: Order) => {
         const yes = confirm('Are you sure that you want remove this order?')
@@ -27,8 +29,16 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, classN
         if (yes) {
             removeOrderFn({
                 order_id: order.id
+            }).then(() => {
+                onRefreshOrders()
             })
         }
+    }
+
+    const handleMarkOrderAsPaid = (orderId: string) => {
+        markOrderAsPaidFn(orderId).then(() => {
+            onRefreshOrders()
+        })
     }
 
     const renderContent = () => {
@@ -51,18 +61,27 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, classN
                 )}>
                     <CardHeader>
                         <div>
-                            <h2 className="text-xl text-primary-600 font-semibold mb-2">
+                            <h2 className="text-xl text-primary-600 font-semibold">
                                 Order #{index + 1}
                             </h2>
-                            <div className="flex items-center justify-between gap-x-1">
-                                <Button variant="light" size="sm" color="primary" type="button">
-                                    Paid?
-                                </Button>
-                                <AddRoundOrder stocks={stocks} orderId={order.id} onAddedSuccess={onRefreshOrders} />
-                                <Button variant="light" size="sm" color="danger" type="button" onPress={() => handleRemoveOrder(order)}>
-                                    Delete
-                                </Button>
-                            </div>
+                            {!paidSection && (
+                                <div className="flex items-center justify-between gap-x-1 mt-2">
+                                    <Button
+                                        variant="light"
+                                        size="sm"
+                                        color="primary"
+                                        type="button"
+                                        onPress={() => handleMarkOrderAsPaid(order.id)}
+                                    >
+                                        Paid?
+                                    </Button>
+                                    <AddRoundOrder stocks={stocks} orderId={order.id} onAddedSuccess={onRefreshOrders} />
+
+                                    <Button variant="light" size="sm" color="danger" type="button" onPress={() => handleRemoveOrder(order)}>
+                                        Delete
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </CardHeader>
                     <Divider />
@@ -104,7 +123,7 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, classN
     return (
         <section className={cn("grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4", className)}>
             <h1 className="col-span-full text-2xl font-semibold">
-                Orders ({orders.length})
+                Orders ({orders.length}): {title}
             </h1>
             {renderContent()}
         </section>

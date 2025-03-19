@@ -1,13 +1,36 @@
 'use client';
+import { useMemo } from "react";
 
 import { useStocks } from "./hooks/use-stock";
 import { CreateOrderForm } from "./components/create-order-form";
 import { useCurrentOrders } from "./hooks/use-orders";
 import { OrdersGrid } from "./components/orders-grid";
+import type { Order } from "./types/orders";
 
 export default function Home() {
   const { stocks, isLoading, error, refetchStocks } = useStocks()
   const { orders, isLoading: isLoadingOrders, error: errorOrders, refetchOrders } = useCurrentOrders()
+
+  const { ordersPaid, ordersUnpaid } = useMemo(() => {
+    const ordersPaid: Order[] = []
+    const ordersUnpaid: Order[] = []
+
+    for (const order in orders) {
+      if (Object.prototype.hasOwnProperty.call(orders, order)) {
+        const element = orders[order];
+        if (element.paid) {
+          ordersPaid.push(element)
+        } else {
+          ordersUnpaid.push(element)
+        }
+      }
+    }
+
+    return {
+      ordersPaid,
+      ordersUnpaid
+    }
+  }, [orders])
 
   if (isLoading || isLoadingOrders) {
     return (
@@ -35,15 +58,28 @@ export default function Home() {
         }}
         className="lg:col-span-4 w-full"
       />
-      <OrdersGrid
-        orders={orders}
-        stocks={stocks}
-        className="lg:col-span-8"
-        onRefreshOrders={() => {
-          refetchStocks();
-          refetchOrders();
-        }}
-      />
+      <div className="lg:col-span-8">
+        <OrdersGrid
+          title="No paid"
+          orders={ordersUnpaid}
+          stocks={stocks}
+          className="mb-8"
+          onRefreshOrders={() => {
+            refetchStocks();
+            refetchOrders();
+          }}
+        />
+        <OrdersGrid
+          title="Paid"
+          paidSection
+          orders={ordersPaid}
+          stocks={stocks}
+          onRefreshOrders={() => {
+            refetchStocks();
+            refetchOrders();
+          }}
+        />
+      </div>
     </main>
   );
 }

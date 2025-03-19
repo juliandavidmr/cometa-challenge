@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import {
 	createOrder,
+	markOrderAsPaid,
 	removeOrder,
 	updateOrder,
 } from "../services/order.service";
@@ -22,9 +23,15 @@ export const useCrudOrders = () => {
 		[]
 	);
 
+	const markOrderAsPaidFn = useCallback(
+		(...args: Parameters<typeof markOrderAsPaid>) => markOrderAsPaid(...args),
+		[]
+	);
+
 	return {
 		createOrderFn,
 		removeOrderFn,
 		updateOrderFn,
+		markOrderAsPaidFn,
 	};
 };

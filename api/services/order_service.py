@@ -62,6 +62,7 @@ class OrderService:
         orders_with_items: List[OrderSchemaResponseSchema] = []
 
         for order in orders:
+            order["subtotal"] = 0
             items: List[OrderItemSchema] = []
             for round_ in order["rounds"]:
                 for item in round_["items"]:
@@ -174,6 +175,15 @@ class OrderService:
         for order in orders:
             if order["id"] == id:
                 orders.remove(order)
+                self.db_service.update_all_registers(orders)
+                return order
+        return None
+
+    def mark_order_as_paid(self, id: str, paid: bool = True) -> OrderSchema | None:
+        orders = self.get_all_orders()
+        for order in orders:
+            if order["id"] == id:
+                order.update(paid=paid)
                 self.db_service.update_all_registers(orders)
                 return order
         return None
