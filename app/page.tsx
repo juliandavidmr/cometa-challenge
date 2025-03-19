@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import { useMemo } from "react";
 
 import { useStocks } from "./hooks/use-stock";
@@ -8,36 +9,41 @@ import { OrdersGrid } from "./components/orders-grid";
 import type { Order } from "./types/orders";
 
 export default function Home() {
-  const { stocks, isLoading, error, refetchStocks } = useStocks()
-  const { orders, isLoading: isLoadingOrders, error: errorOrders, refetchOrders } = useCurrentOrders()
+  const { stocks, isLoading, error, refetchStocks } = useStocks();
+  const {
+    orders,
+    isLoading: isLoadingOrders,
+    error: errorOrders,
+    refetchOrders,
+  } = useCurrentOrders();
 
   const { ordersPaid, ordersUnpaid } = useMemo(() => {
-    const ordersPaid: Order[] = []
-    const ordersUnpaid: Order[] = []
+    const ordersPaid: Order[] = [];
+    const ordersUnpaid: Order[] = [];
 
     for (const order in orders) {
       if (Object.prototype.hasOwnProperty.call(orders, order)) {
         const element = orders[order];
         if (element.paid) {
-          ordersPaid.push(element)
+          ordersPaid.push(element);
         } else {
-          ordersUnpaid.push(element)
+          ordersUnpaid.push(element);
         }
       }
     }
 
     return {
       ordersPaid,
-      ordersUnpaid
-    }
-  }, [orders])
+      ordersUnpaid,
+    };
+  }, [orders]);
 
   if (isLoading || isLoadingOrders) {
     return (
       <div className="flex items-center justify-center w-screen h-screen">
         Loading...
       </div>
-    )
+    );
   }
 
   if (error || errorOrders) {
@@ -45,7 +51,7 @@ export default function Home() {
       <div className="flex items-center justify-center w-screen h-screen">
         Error: {(error || errorOrders).message}
       </div>
-    )
+    );
   }
 
   return (

@@ -9,7 +9,7 @@ class StockService:
         self.last_update = last_update
 
     def get_stock(self) -> List[StockSchema]:
-        return self.stock
+        return [item for item in self.stock if item["quantity"] > 0]
 
     def get_stock_item_by_id(self, id: str) -> StockSchema | None:
         for item in self.stock:

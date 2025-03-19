@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers.orders_router import OrdersRouter
-from api.routers.stocks_router import StockRouter, stock_service
+from api.routers.stocks_router import StockRouter
 
 ### Create FastAPI instance with custom docs and openapi url
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")

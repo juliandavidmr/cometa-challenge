@@ -1,21 +1,16 @@
-from fastapi import APIRouter
-from datetime import datetime
+from fastapi import APIRouter, Depends
+
+from api.dependencies import get_stock_service
 
 from ..services.stock_service import StockService
-from ..data.initial_stock import INITIAL_STOCK
 
 StockRouter = APIRouter(
     prefix="/api/stocks",
     tags=["stocks"],
 )
 
-stock_service = StockService(
-    INITIAL_STOCK, datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-)
-
-
 @StockRouter.get("/")
-def get_all_stocks():
+def get_all_stocks(stock_service: StockService = Depends(get_stock_service)):
     """
     Get all available orders
     """
@@ -27,7 +22,7 @@ def get_all_stocks():
 
 
 @StockRouter.get("/{order_id:str}")
-def get_stock_by_id(order_id: str):
+def get_stock_by_id(order_id: str, stock_service: StockService = Depends(get_stock_service)):
     """
     Get order by id
     """
