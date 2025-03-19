@@ -96,7 +96,7 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSec
                             </span>
                             <br />
                             <span className="text-md text-success-600 font-semibold">
-                                Total: ${order.subtotal}
+                                Total: ${order.subtotal} {order.discounts > 0 && <span className="text-xs text-gray-400">({order.discounts}% discounts)</span>}
                             </span>
                         </p>
                         <ul>
@@ -114,6 +114,10 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSec
                                 )
                             })}
                         </ul>
+                        <p className="text-sm font-medium mt-3">
+                            Total items: {order.items.length}
+                            {' '}({order.items.reduce((acc, item) => (+item.quantity + acc), 0)} beers)
+                        </p>
                     </CardBody>
                 </Card>
             )

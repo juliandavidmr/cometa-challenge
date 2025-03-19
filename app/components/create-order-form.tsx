@@ -1,16 +1,17 @@
 'use client'
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Form } from "@heroui/form";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
 import { cn } from "@heroui/theme";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 
 import type { StockModel } from "../types/stocks"
 import { useCrudOrders } from "../hooks/use-crud-orders";
+import { Divider } from "@heroui/react";
 
 type TCreateOrderFormProps = {
     className?: string
@@ -24,6 +25,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
     onCreateOrderSuccess,
 }) => {
     const { createOrderFn } = useCrudOrders()
+    const discountsRef = useRef<HTMLInputElement | null>(null);
     const [orders, setOrders] = useState<{
         name: string
         stockId: string
@@ -37,15 +39,10 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
         }, {} as Record<string, StockModel>)
     }, [stocks])
 
-    const [selectedKeys, setSelectedKeys] = useState(new Set([]));
-
-    const selectedValue = useMemo(
-        () => Array.from(selectedKeys).map((key) => stocksById[key].name).join(", "),
-        [selectedKeys, stocksById],
-    );
+    const [selectedStock, setSelectedStock] = useState<string>();
 
     const handleCreateOrder = (formData: FormData) => {
-        const stockId = selectedKeys.values().next().value as unknown as string
+        const stockId = selectedStock!
         const quantity = parseInt(formData.get("stock") as string)
 
         setOrders(preOrders => [...preOrders, {
@@ -65,35 +62,49 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
             stock_id: order.stockId,
             quantity: order.quantity,
         }))
+        const discounts = parseFloat(discountsRef.current?.value || '0')
 
         await createOrderFn({
             taxes: 0,
-            discounts: 0,
+            discounts,
             rounds: finalOrders,
         })
 
         onCreateOrderSuccess()
-
         setOrders([])
-        setSelectedKeys(new Set([]))
+        setSelectedStock(undefined)
     }
 
     return (
         <section className={cn("flex flex-col gap-4", className)}>
-            <div className="flex justify-between items-center">
+
+            <div className="flex justify-between items-center gap-4 w-full">
                 <div>
                     <h1 className="text-2xl font-bold">Create order</h1>
                     <p className="text-sm text-gray-500">Add some beers to your order</p>
                 </div>
+
                 <Button
                     variant="solid"
                     color="secondary"
                     onPress={handleCreateFinalOrder}
                     isDisabled={orders.length === 0}
                 >
-                    Create final order ({orders.length})
+                    Send order ({orders.length})
                 </Button>
             </div>
+            <Input
+                type="number"
+                label="Discount %"
+                name="discounts"
+                ref={discountsRef}
+                min={0}
+                max={100}
+                isRequired
+                variant="flat"
+                defaultValue={"0"}
+                placeholder="Enter discount"
+            />
             <Table className="col-span-12" aria-label="Example static collection table">
                 <TableHeader>
                     <TableColumn>BEER</TableColumn>
@@ -101,7 +112,13 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                     <TableColumn>PRICE</TableColumn>
                     <TableColumn>{' '}</TableColumn>
                 </TableHeader>
-                <TableBody>
+                <TableBody emptyContent={
+                    <p>
+                        No beers in this order.
+                        <br />
+                        Select beer and then click on add
+                    </p>
+                }>
                     {orders.map((order, index) => (
                         <TableRow key={order.stockId}>
                             <TableCell>{order.name}</TableCell>
@@ -111,9 +128,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                                 <Button
                                     variant="flat"
                                     color="danger"
-                                    onPress={() => {
-                                        handleRemoveOrder(index)
-                                    }}
+                                    onPress={() => handleRemoveOrder(index)}
                                 >
                                     Delete
                                 </Button>
@@ -124,32 +139,22 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
             </Table>
 
             <Form
-                className="col-span-12 grid grid-cols-2 lg:grid-cols-3 gap-4 w-full"
                 action={handleCreateOrder}
                 validationBehavior="native"
+                className="col-span-12 grid grid-cols-3 gap-4 w-full"
             >
-                <Dropdown backdrop="blur" shouldBlockScroll={false}>
-                    <DropdownTrigger>
-                        <Button className="capitalize" name="stock_id" variant="flat">
-                            {selectedValue || 'Select beer'}
-                        </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        aria-label="Single selection example"
-                        selectedKeys={selectedKeys}
-                        selectionMode="single"
-                        disallowEmptySelection
-                        variant="flat"
-                        // @ts-expect-error
-                        onSelectionChange={setSelectedKeys}
-                    >
-                        {stocks.map((stock) => (
-                            <DropdownItem key={stock.id} value={stock.id} showDivider>
-                                {stock.name}
-                            </DropdownItem>
-                        ))}
-                    </DropdownMenu>
-                </Dropdown>
+                <Autocomplete
+                    label="Beers stock"
+                    defaultItems={stocks}
+                    placeholder="Select a beer"
+                    selectedKey={selectedStock}
+                    className="col-span-2"
+                    isRequired
+                    // @ts-expect-error
+                    onSelectionChange={setSelectedStock}
+                >
+                    {(stock) => <AutocompleteItem key={stock.id}>{stock.name}</AutocompleteItem>}
+                </Autocomplete>
 
                 <Input
                     type="number"
@@ -157,18 +162,19 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
                     min={1}
                     max={1000}
                     isRequired
+                    label="Quantity"
                     variant="flat"
                     defaultValue={"1"}
-                    placeholder="Enter stock quantity"
+                    placeholder="Enter quantity"
                 />
+                <Divider className="col-span-full" />
                 <Button
                     type="submit"
-                    variant="flat"
                     color="primary"
-                    className="col-span-2 lg:col-span-1"
-                    isDisabled={selectedKeys.size === 0}
+                    className="col-span-full"
+                    isDisabled={selectedStock === undefined}
                 >
-                    Add to order
+                    Add beer to order
                 </Button>
             </Form>
         </section>

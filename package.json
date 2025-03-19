@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/autocomplete": "^2.3.17",
     "@heroui/button": "^2.2.16",
     "@heroui/card": "^2.2.15",
     "@heroui/dropdown": "^2.3.16",

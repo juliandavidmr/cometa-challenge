@@ -31,8 +31,6 @@ class OrderService:
 
         for order in orders:
             items: List[OrderItemSchema] = []
-            order["subtotal"] = 0
-            order["discounts"] = 0
             rounds = order["rounds"]
             for round_ in rounds:
                 for round_item in round_["items"]:
@@ -41,9 +39,6 @@ class OrderService:
 
                     if stock_item is None:
                         continue
-
-                    subtotal = stock_item["price"] * round_item["quantity"]
-                    order["subtotal"] += subtotal
 
                     items.append(
                         OrderItemSchema(
@@ -58,13 +53,15 @@ class OrderService:
         return orders
 
     def get_calculated_orders(self) -> List[OrderSchemaResponseSchema]:
-        orders = self.db_service.get_registers()
+        orders = self.db_service.get_registers().copy()
         orders_with_items: List[OrderSchemaResponseSchema] = []
 
         for order in orders:
-            order["subtotal"] = 0
+            subtotal_order = 0
             items: List[OrderItemSchema] = []
+
             for round_ in order["rounds"]:
+                subtotal = 0
                 for item in round_["items"]:
                     stock_id = item["stock_id"]
                     stock_item = self.stock_service.get_stock_item_by_id(stock_id)
@@ -72,23 +69,23 @@ class OrderService:
                     if stock_item is None:
                         continue
 
-                    subtotal = stock_item["price"] * item["quantity"]
-                    order["subtotal"] += subtotal
+                    total = stock_item["price"] * item["quantity"]
+                    subtotal += total
+                    subtotal_order += total
 
                     items.append(
                         OrderItemSchema(
                             name=stock_item["name"],
                             quantity=item["quantity"],
-                            total=stock_item["price"] * item["quantity"],
+                            total=subtotal,
                             price_per_unit=stock_item["price"],
                             stock_id=stock_id,
                         )
                     )
 
-            # Apply discounts
-            order["subtotal"] = order["subtotal"] * (
-                order["discounts"] if order["discounts"] > 0 else 1
-            )
+            # Apply discount by subtracting the discount percentage from the subtotal
+            discounts = order["discounts"] / 100 if order["discounts"] > 0 else 0
+            subtotal_order = subtotal_order - (subtotal_order * discounts)
 
             orders_with_items.append(
                 OrderSchemaResponseSchema(
@@ -96,7 +93,7 @@ class OrderService:
                     paid=order["paid"],
                     created=order["created"],
                     taxes=order["taxes"],
-                    subtotal=order["subtotal"],
+                    subtotal=subtotal_order,
                     discounts=order["discounts"],
                     items=items,
                     rounds=order["rounds"],
@@ -125,8 +122,8 @@ class OrderService:
             created=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             paid=False,
             subtotal=0,
-            taxes=0,
-            discounts=0,
+            taxes=to_create_order["taxes"],
+            discounts=to_create_order["discounts"],
             rounds=[
                 OrderRoundSchema(
                     created=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
