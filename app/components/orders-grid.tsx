@@ -44,9 +44,9 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, classN
             return (
                 <Card key={order.id} className={cn(
                     // Border
-                    "border-2 border-solid border-gray-200 dark:border-gray-600",
+                    "border-2 border-solid border-transparent dark:border-gray-600",
                     // Hover
-                    "hover:border-gray-400",
+                    "hover:border-primary-300",
                     "bg-white dark:bg-slate-800"
                 )}>
                     <CardHeader>
@@ -84,9 +84,9 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, classN
                             {order.items.map((item, index) => {
                                 return (
                                     <li
-                                        key={item.stock_id}
+                                        key={index}
                                         className={cn(
-                                            'rounded-md p-0.5 hover:bg-secondary-200',
+                                            'rounded-md p-0.5 hover:bg-primary-100',
                                             index % 2 === 0 && "bg-slate-50"
                                         )}
                                     >
