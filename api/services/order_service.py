@@ -97,8 +97,6 @@ class OrderService:
                 )
             )
 
-        orders_with_items.sort(key=lambda x: x["created"], reverse=True)
-
         return orders_with_items
 
     def get_order_by_id(self, id: int):
@@ -171,7 +169,7 @@ class OrderService:
                 self.db_service.update_all_registers(orders)
                 return order
 
-    def remove_order(self, id: int) -> OrderSchema | None:
+    def remove_order(self, id: str) -> OrderSchema | None:
         orders = self.get_all_orders()
         for order in orders:
             if order["id"] == id:

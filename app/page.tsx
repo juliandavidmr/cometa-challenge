@@ -17,18 +17,10 @@ export default function Home() {
     )
   }
 
-  if (error) {
+  if (error || errorOrders) {
     return (
       <div className="flex items-center justify-center w-screen h-screen">
-        Error: {error.message}
-      </div>
-    )
-  }
-
-  if (errorOrders) {
-    return (
-      <div className="flex items-center justify-center w-screen h-screen">
-        Error: {errorOrders.message}
+        Error: {(error || errorOrders).message}
       </div>
     )
   }
@@ -43,7 +35,15 @@ export default function Home() {
         }}
         className="lg:col-span-4 w-full"
       />
-      <OrdersGrid orders={orders} className="lg:col-span-8" />
+      <OrdersGrid
+        orders={orders}
+        stocks={stocks}
+        className="lg:col-span-8"
+        onRefreshOrders={() => {
+          refetchStocks();
+          refetchOrders();
+        }}
+      />
     </main>
   );
 }

@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <HeroUIProvider>
-      <NextThemesProvider attribute="class" defaultTheme="dark">
+      <NextThemesProvider attribute="class">
         <html lang="en">
           <body className={inter.className}>
             {children}

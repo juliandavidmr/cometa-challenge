@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-import { getStocks } from "../repository/stocks.repository";
+import { getStocks } from "../services/stocks.service";
 
 export const useStocks = () => {
 	const {

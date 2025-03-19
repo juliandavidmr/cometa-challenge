@@ -9,8 +9,9 @@ import { Form } from "@heroui/form";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
 import { cn } from "@heroui/theme";
 
-import { StockModel } from "../types/stocks"
-import { useCrudStocks } from "../hooks/use-crud-stock";
+import type { StockModel } from "../types/stocks"
+import { useCrudOrders } from "../hooks/use-crud-orders";
+
 type TCreateOrderFormProps = {
     className?: string
     stocks: StockModel[]
@@ -22,7 +23,7 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
     className,
     onCreateOrderSuccess,
 }) => {
-    const { createOrderFn } = useCrudStocks()
+    const { createOrderFn } = useCrudOrders()
     const [orders, setOrders] = useState<{
         name: string
         stockId: string

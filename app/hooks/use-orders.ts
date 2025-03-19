@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-import { getCurrentOrders } from "../repository/order.service";
+import { getCurrentOrders } from "../services/order.service";
 
 export const useCurrentOrders = () => {
 	const {

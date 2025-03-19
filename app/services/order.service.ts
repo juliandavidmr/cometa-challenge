@@ -9,6 +9,20 @@ type TCreateOrderArgs = {
 	}>;
 };
 
+type TRemoveOrderArgs = {
+	order_id: string;
+};
+
+type TUpdateOrderArgs = {
+	order_id: string;
+	rounds: Array<{
+		stock_id: string;
+		quantity: number;
+	}>;
+};
+
+type TUpdateOrderResponse = {};
+
 type TCreateOrderResponse = {
 	success: boolean;
 };
@@ -22,6 +36,28 @@ export async function createOrder(args: TCreateOrderArgs) {
 		body: JSON.stringify(args),
 	});
 	return await (res.json() as Promise<TCreateOrderResponse>);
+}
+
+export async function removeOrder(args: TRemoveOrderArgs) {
+	const res = await fetch(`/api/orders/${args.order_id}`, {
+		method: "DELETE",
+	});
+
+	return res.ok;
+}
+
+export async function updateOrder(
+	args: TUpdateOrderArgs
+): Promise<TUpdateOrderResponse> {
+	const res = await fetch(`/api/orders/${args.order_id}`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ rounds: args.rounds }),
+	});
+
+	return res.ok;
 }
 
 export async function getCurrentOrders(url: string) {

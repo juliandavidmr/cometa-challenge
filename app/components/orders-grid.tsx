@@ -4,13 +4,30 @@ import { Button } from "@heroui/button"
 import { cn } from "@heroui/theme"
 
 import type { Order } from "../types/orders"
+import { useCrudOrders } from "../hooks/use-crud-orders"
+import { AddRoundOrder } from "./add-rounds-order"
+import type { StockModel } from "../types/stocks"
 
 type TOrdersTableProps = {
     orders: Order[]
+    stocks: StockModel[]
     className?: string
+    onRefreshOrders: () => void
 }
 
-export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, className }) => {
+export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, stocks, className, onRefreshOrders }) => {
+    const { removeOrderFn } = useCrudOrders()
+
+    const handleRemoveOrder = (order: Order) => {
+        const yes = confirm('Are you sure that you want remove this order?')
+
+        if (yes) {
+            removeOrderFn({
+                order_id: order.id
+            })
+        }
+    }
+
     const renderContent = () => {
         if (!orders.length) {
             return (
@@ -24,14 +41,24 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, className }) =
             return (
                 <article key={order.id} className={cn(
                     // Padding
-                    "p-3.5",
+                    "p-3",
                     // Border
-                    "border border-solid border-gray-200 dark:border-gray-600",
+                    "border-2 border-solid border-gray-200 dark:border-gray-600",
                     // Rounded
                     "rounded-large overflow-hidden",
                     // Hover
-                    "hover:bg-slate-400 hover:dark:bg-slate-900"
+                    "hover:border-secondary-200",
+                    "bg-white dark:bg-slate-800"
                 )}>
+                    <div className="flex items-center justify-between gap-x-4 mb-3">
+                        <Button variant="flat" color="success" type="button">
+                            Mark as paid
+                        </Button>
+                        <AddRoundOrder stocks={stocks} orderId={order.id} onAddedSuccess={onRefreshOrders} />
+                        <Button variant="light" color="danger" type="button" onPress={() => handleRemoveOrder(order)}>
+                            Remove
+                        </Button>
+                    </div>
                     <h2 className="text-xl text-primary-600">
                         Order #{index + 1}
                     </h2>
@@ -48,23 +75,21 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ orders, className }) =
                             Total: ${order.subtotal}
                         </span>
                     </p>
-                    <ul className="mb-3">
+                    <ul>
                         {order.items.map((item, index) => {
                             return (
-                                <li key={item.stock_id}>
+                                <li
+                                    key={item.stock_id}
+                                    className={cn(
+                                        'rounded-md p-0.5 hover:bg-secondary-200',
+                                        index % 2 === 0 && "bg-slate-50"
+                                    )}
+                                >
                                     <span className="text-sm text-gray-400">{index + 1})</span> {item.quantity} de {item.name}
                                 </li>
                             )
                         })}
                     </ul>
-                    <div className="flex items-center justify-between">
-                        <Button variant="flat" color="success" type="button">
-                            Mark as paid
-                        </Button>
-                        <Button variant="flat" color="danger" type="button">
-                            Remove
-                        </Button>
-                    </div>
                 </article>
             )
         })

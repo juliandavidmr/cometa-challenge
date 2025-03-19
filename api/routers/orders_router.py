@@ -48,7 +48,7 @@ def add_round_to_order(
 
 
 @OrdersRouter.delete("/{id:str}")
-def remove_order(id: int, order_service: OrderService = Depends(get_order_service)):
+def remove_order(id: str, order_service: OrderService = Depends(get_order_service)):
     """
     Remove an order by id
     """
