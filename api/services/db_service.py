@@ -8,7 +8,7 @@ from api.schemas.order_schema import OrderSchema
 class DBService:
     def __init__(self):
         self.db_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "db.json"
+            os.path.dirname(os.path.dirname(__file__)), "data/db.json"
         )
 
     def get_registers(self) -> List[OrderSchema]:

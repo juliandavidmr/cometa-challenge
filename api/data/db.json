@@ -131,6 +131,15 @@
             "quantity": 4
           }
         ]
+      },
+      {
+        "created": "2025-03-19 17:44:33",
+        "items": [
+          {
+            "stock_id": "1",
+            "quantity": 5
+          }
+        ]
       }
     ]
   },
@@ -225,6 +234,15 @@
           {
             "stock_id": "3",
             "quantity": 1
+          }
+        ]
+      },
+      {
+        "created": "2025-03-19 17:44:43",
+        "items": [
+          {
+            "stock_id": "1",
+            "quantity": 2
           }
         ]
       }
