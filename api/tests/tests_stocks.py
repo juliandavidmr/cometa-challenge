@@ -6,7 +6,7 @@ def test_get_all_stocks(client: TestClient):
     response = client.get("/api/stocks/")
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] == True
+    assert data["success"]
     assert "last_update" in data
     assert data["last_update"] != ""
     assert "beers" in data
@@ -24,7 +24,7 @@ def test_get_stock_by_id(client):
 
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] == True
+    assert data["success"]
     assert data["beer"]["id"] == beer_id
 
 
@@ -33,6 +33,6 @@ def test_get_nonexistent_stock(client):
     response = client.get("/api/stocks/undefined")
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] == False
+    assert not data["success"]
     assert data["beer"] is None
     assert "error_message" in data

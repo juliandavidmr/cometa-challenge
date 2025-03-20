@@ -8,7 +8,7 @@ def test_get_all_orders(client: TestClient):
     response = client.get("/api/orders/")
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] == True
+    assert data["success"]
     assert "orders" in data
 
 
@@ -21,7 +21,7 @@ def test_create_order(client: TestClient):
     response = client.post("/api/orders/", json=order_data)
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] == True
+    assert data["success"]
     assert "order" in data
     assert len(data["order"]["rounds"]) == 1
     assert data["order"]["discounts"] == order_data["discounts"]
