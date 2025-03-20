@@ -33,6 +33,12 @@ To run only the FastAPI server, execute the following command:
 uv run uvicorn api.index:app --reload
 ```
 
+Run backend test cases:
+
+```bash
+uv run pytest
+```
+
 ## Getting Started
 
 Install the dependencies:

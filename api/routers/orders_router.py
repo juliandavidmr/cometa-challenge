@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 
-from api.schemas.order_schema import (
+from ..schemas.order_schema import (
     AddRoundsToOrderSchema,
     CreateOrderSchema,
 )
-from api.dependencies import get_order_service
-from api.services.order_service import OrderService
+from ..dependencies import get_order_service
+from ..services.order_service import OrderService
 
 OrdersRouter = APIRouter(
     prefix="/api/orders",

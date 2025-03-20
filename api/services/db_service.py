@@ -1,14 +1,19 @@
 import json
 import os
-
+import sys
 from typing import List
+
 from api.schemas.order_schema import OrderSchema
 
 
 class DBService:
     def __init__(self):
+        data_json_path = "data/db.json"
+        if "pytest" in sys.modules:
+            data_json_path = "tests/db_test.json"
+
         self.db_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "data/db.json"
+            os.path.dirname(os.path.dirname(__file__)), data_json_path
         )
 
     def get_registers(self) -> List[OrderSchema]:

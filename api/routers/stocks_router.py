@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 
-from api.dependencies import get_stock_service
-
+from ..dependencies import get_stock_service
 from ..services.stock_service import StockService
 
 StockRouter = APIRouter(
     prefix="/api/stocks",
     tags=["stocks"],
 )
+
 
 @StockRouter.get("/")
 def get_all_stocks(stock_service: StockService = Depends(get_stock_service)):
@@ -22,7 +22,9 @@ def get_all_stocks(stock_service: StockService = Depends(get_stock_service)):
 
 
 @StockRouter.get("/{order_id:str}")
-def get_stock_by_id(order_id: str, stock_service: StockService = Depends(get_stock_service)):
+def get_stock_by_id(
+    order_id: str, stock_service: StockService = Depends(get_stock_service)
+):
     """
     Get order by id
     """
