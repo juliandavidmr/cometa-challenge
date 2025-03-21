@@ -66,6 +66,10 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSec
         , []
     )
 
+    const humanizePrice = useCallback((price: number): string => {
+        return price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    }, [])
+
     const renderContent = () => {
         if (!orders.length) {
             return (
@@ -120,7 +124,8 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSec
                             </span>
                             <br />
                             <span className="text-md text-success-600 font-semibold">
-                                Total: ${order.subtotal} {order.discounts > 0 && <span className="text-xs text-gray-400">({order.discounts}% discounts)</span>}
+                                {humanizePrice(order.subtotal)}{' '}
+                                {order.discounts > 0 && <span className="text-xs text-gray-400">({order.discounts}% discounts)</span>}
                             </span>
                         </p>
                         <ul>
@@ -132,6 +137,7 @@ export const OrdersGrid: React.FC<TOrdersTableProps> = ({ title, orders, paidSec
                                             'rounded-md p-0.5 hover:bg-primary-100 group',
                                             index % 2 === 0 && "bg-slate-50"
                                         )}
+                                        aria-label={`Item #${index + 1}: ${item.quantity} of ${item.name}`}
                                     >
                                         <span className="text-sm text-gray-300 group-hover:text-gray-800">#{index + 1})</span>{' '}
                                         <span className="text-md font-semibold text-gray-800">{item.quantity}</span>{' '}
