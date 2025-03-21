@@ -6,7 +6,7 @@ import { useStocks } from "./hooks/use-stock";
 import { CreateOrderForm } from "./components/create-order-form";
 import { useCurrentOrders } from "./hooks/use-orders";
 import { OrdersGrid } from "./components/orders-grid";
-import type { Order } from "./types/orders";
+import type { OrderModel } from "./types/orders";
 
 export default function Home() {
   const { stocks, isLoading, error, refetchStocks } = useStocks();
@@ -18,8 +18,8 @@ export default function Home() {
   } = useCurrentOrders();
 
   const { ordersPaid, ordersUnpaid } = useMemo(() => {
-    const ordersPaid: Order[] = [];
-    const ordersUnpaid: Order[] = [];
+    const ordersPaid: OrderModel[] = [];
+    const ordersUnpaid: OrderModel[] = [];
 
     for (const order in orders) {
       if (Object.prototype.hasOwnProperty.call(orders, order)) {
@@ -32,10 +32,7 @@ export default function Home() {
       }
     }
 
-    return {
-      ordersPaid,
-      ordersUnpaid,
-    };
+    return { ordersPaid, ordersUnpaid };
   }, [orders]);
 
   if (isLoading || isLoadingOrders) {

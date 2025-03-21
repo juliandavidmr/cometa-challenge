@@ -1,4 +1,4 @@
-import type { Order } from "../types/orders";
+import type { OrderModel } from "../types/orders";
 
 type TCreateOrderArgs = {
 	taxes: number;
@@ -63,7 +63,7 @@ export async function updateOrder(
 export async function getCurrentOrders(url: string) {
 	interface CurrentOrdersResponse {
 		success: boolean;
-		orders: Order[];
+		orders: OrderModel[];
 	}
 
 	const response = await fetch(url);

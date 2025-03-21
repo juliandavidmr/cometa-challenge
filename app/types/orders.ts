@@ -1,15 +1,15 @@
-export interface Order {
+export interface OrderModel {
 	id: string;
 	paid: boolean;
 	created: string;
 	taxes: number;
 	subtotal: number;
 	discounts: number;
-	items: OrderItem[];
-	rounds: OrderRound[];
+	items: OrderItemModel[];
+	rounds: OrderRoundModel[];
 }
 
-export interface OrderItem {
+export interface OrderItemModel {
 	name: string;
 	quantity: number;
 	total: number;
@@ -17,12 +17,12 @@ export interface OrderItem {
 	stock_id: string;
 }
 
-export interface OrderRound {
+export interface OrderRoundModel {
 	created: string;
-	items: OrderRoundItem[];
+	items: OrderRoundItemModel[];
 }
 
-export interface OrderRoundItem {
+export interface OrderRoundItemModel {
 	stock_id: string;
 	quantity: number;
 }

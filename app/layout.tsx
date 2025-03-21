@@ -1,5 +1,6 @@
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/toast";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter } from "next/font/google";
 
@@ -20,6 +21,7 @@ export default function RootLayout({
       <NextThemesProvider attribute="class">
         <html lang="en">
           <body className={inter.className}>
+            <ToastProvider />
             {children}
           </body>
         </html >

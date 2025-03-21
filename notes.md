@@ -1,22 +1,23 @@
 1. Demo
 
-- [x] General functionality
-- [x] Readme
+- [ ] General functionality
+- [ ] Readme
 
 2. Backend
 
-- [x] FastAPI Config
-- [x] UV Tool
-- [x] Routes
-- [x] Schemas
-- [x] Dependencies
-- [x] DB based on JSON
+- [ ] FastAPI Config
+- [ ] UV Tool
+- [ ] Routes
+- [ ] Schemas
+- [ ] Dependencies
+- [ ] Testing
+- [ ] DB based on JSON
 
 3. Frontend
 
-- [x] NextJS Config
-- [x] Libraries (package.json)
-- [x] Components
-- [x] Pages
-- [x] API
-- [x] Responsive Design
+- [ ] NextJS Config
+- [ ] Libraries (package.json)
+- [ ] Components
+- [ ] Pages
+- [ ] API
+- [ ] Responsive Design

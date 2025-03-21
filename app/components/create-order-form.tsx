@@ -8,10 +8,11 @@ import { Form } from "@heroui/form";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
 import { cn } from "@heroui/theme";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { addToast } from "@heroui/toast";
+import { Divider } from "@heroui/divider";
 
 import type { StockModel } from "../types/stocks"
 import { useCrudOrders } from "../hooks/use-crud-orders";
-import { Divider } from "@heroui/react";
 
 type TCreateOrderFormProps = {
     className?: string
@@ -73,6 +74,12 @@ export const CreateOrderForm: React.FC<TCreateOrderFormProps> = ({
         onCreateOrderSuccess()
         setOrders([])
         setSelectedStock(undefined)
+
+        addToast({
+            title: 'Order created successfully',
+            description: 'Your order has been sent to the barman',
+            color: 'success',
+        })
     }
 
     return (

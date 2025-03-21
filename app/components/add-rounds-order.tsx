@@ -1,21 +1,25 @@
 import { useMemo, useState } from "react";
 
+import { useDisclosure } from "@heroui/react";
+import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
+import { addToast } from "@heroui/toast";
+import { Form } from "@heroui/form";
+import {
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+} from "@heroui/dropdown";
 import {
     Modal,
     ModalContent,
     ModalHeader,
     ModalBody,
-    ModalFooter,
-    Button,
-    useDisclosure,
-    Input,
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem,
-    Form,
-} from "@heroui/react";
-import { StockModel } from "../types/stocks";
+    ModalFooter
+} from "@heroui/modal";
+
+import type { StockModel } from "../types/stocks";
 import { useCrudOrders } from "../hooks/use-crud-orders";
 
 type TAddRoundOrderProps = {
@@ -55,14 +59,25 @@ export const AddRoundOrder: React.FC<TAddRoundOrderProps> = ({ open, orderId, st
                 stock_id,
                 quantity
             }]
-        }).finally(() => {
-            setUpdating(false)
-            onAddedSuccess()
-            onClose()
-        }).catch(error => {
-            console.error(error);
-            alert('Error')
         })
+            .then(() => {
+                addToast({
+                    title: 'Round added successfully',
+                    description: `Round added successfully to order ${orderId}`,
+                    color: 'success',
+                });
+                onAddedSuccess()
+            })
+            .finally(() => {
+                setUpdating(false)
+                onClose()
+            }).catch(() => {
+                addToast({
+                    title: 'Error adding round',
+                    description: `Error adding round to order ${orderId}`,
+                    color: 'danger',
+                })
+            })
     }
 
     return (
